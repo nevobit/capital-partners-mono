@@ -1,0 +1,8 @@
+pymt4
+MetaTrader5
+numpy
+pandas
+ta-lib
+pytz
+websocket-client
+requests
