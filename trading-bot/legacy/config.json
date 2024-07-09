@@ -1,0 +1,7 @@
+{
+    "api_base_url": "http://localhost:7000/api/v1",
+    "websocket_url": "ws://localhost:7000/ws",
+    "check_interval": 60,
+    "log_level": "INFO",
+    "timeframe": 15 
+}

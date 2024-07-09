@@ -8,8 +8,11 @@ class WebSocketClient:
         self.url = url
         self.ws = None
         self.on_message_callback = None
+        self.reconnect_interval = 5
+        self.is_connected = False
 
     def set_on_message_callback(self, callback):
+        self.is_connected = True
         self.on_message_callback = callback
 
     def connect(self):
@@ -29,7 +32,7 @@ class WebSocketClient:
     def _on_error(self, ws, error):
         logger.error(f"WebSocket error: {error}")
 
-    def _on_close(self, ws):
+    def _on_close(self, ws, close_status_code, close_msg):
         logger.info("WebSocket connection closed")
 
     def _on_open(self, ws):

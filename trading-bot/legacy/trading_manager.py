@@ -5,7 +5,6 @@ import threading
 from typing import Dict
 from api_client import APIClient
 from websocket_client import WebSocketClient
-from mt4_platform import MT4Platform
 from mt5_platform import MT5Platform
 from order_block_bot import OrderBlockBot
 from market_hours import is_london_market_open
@@ -22,15 +21,16 @@ class TradingManager:
     def initialize(self):
         accounts = self.api_client.get_accounts()
         for account in accounts:
-            platform_class = MT4Platform if account['type'] == 'MT4' else MT5Platform
+            platform_class =  MT5Platform
+            print(account)
             platform = platform_class(account['server'], account['login'], account['password'])
             platform.connect()
             self.platforms[account['id']] = platform
 
         bots = self.api_client.get_bots()
         for bot_config in bots:
-            if bot_config['account_id'] in self.platforms:
-                platform = self.platforms[bot_config['account_id']]
+            if bot_config['account'] in self.platforms:
+                platform = self.platforms[bot_config['account']]
                 bot = OrderBlockBot(platform, bot_config)
                 self.bots[bot_config['id']] = bot
 
@@ -63,7 +63,7 @@ class TradingManager:
         while True:
             if is_london_market_open():
                 for bot_id, bot in self.bots.items():
-                    if bot.config['active']:
+                    if bot.config['statusBoot'] == "active":
                         bot.run()
             else:
                 logger.info("Mercado de Londres cerrado. Esperando para la próxima sesión.")

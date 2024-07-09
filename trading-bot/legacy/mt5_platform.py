@@ -12,7 +12,12 @@ class MT5Platform(TradingPlatform):
         self.password = password
 
     def connect(self):
+        print(self.server)
+        print(self.login)
+        print(self.password)
+
         try:
+            mt5.login(login=self.login, server=self.server, password=self.password)
             if not mt5.initialize(login=self.login, server=self.server, password=self.password):
                 raise Exception(mt5.last_error())
             logger.info(f"Conectado a MT5: {self.server}")
@@ -29,20 +34,23 @@ class MT5Platform(TradingPlatform):
             raise
 
     def place_order(self, symbol: str, order_type: str, volume: float, price: float, sl: float, tp: float):
+        print("Place Order", price)
         try:
             request = {
-                "action": mt5.TRADE_ACTION_PENDING,
+                "action": mt5.TRADE_ACTION_DEAL,
                 "symbol": symbol,
-                "volume": volume,
+                "volume": 2.0,
                 "type": order_type,
                 "price": price,
                 "sl": sl,
                 "tp": tp,
-                "magic": 234000,
+                "deviation": 20,
+                "magic": 100,
                 "comment": "Order Block Trade",
                 "type_time": mt5.ORDER_TIME_GTC,
-                "type_filling": mt5.ORDER_FILLING_IOC,
+                "type_filling": 0,
             }
+            print(request)
             result = mt5.order_send(request)
             logger.info(f"Orden colocada en MT5: {result}")
             return result
