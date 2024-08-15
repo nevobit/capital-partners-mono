@@ -1,6 +1,6 @@
 {
-    "api_base_url": "http://localhost:7000/api/v1",
-    "websocket_url": "ws://localhost:7000/ws",
+    "api_base_url": "https://www.cpbotapi.xyz/api/v1",
+    "websocket_url": "wss://www.cpbotapi.xyz/ws",
     "check_interval": 60,
     "log_level": "INFO",
     "timeframe": 15 
