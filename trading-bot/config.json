@@ -1,6 +1,6 @@
 {
-    "api_base_url": "https://www.cpbotapi.xyz/api/v1",
-    "websocket_url": "wss://www.cpbotapi.xyz/ws",
+    "api_base_url": "https://cp.real-vision-api.cloud/api/v1",
+    "websocket_url": "wss://cp.real-vision-api.cloud/ws",
     "check_interval": 60,
     "log_level": "INFO",
     "timeframe": 15 

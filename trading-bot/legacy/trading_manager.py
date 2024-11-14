@@ -22,12 +22,11 @@ class TradingManager:
         accounts = self.api_client.get_accounts()
         for account in accounts:
             platform_class =  MT5Platform
-            print(account)
             platform = platform_class(account['server'], account['login'], account['password'])
             platform.connect()
             self.platforms[account['id']] = platform
 
-        bots = self.api_client.get_bots()
+        bots = self.api_client.get_bots().items
         for bot_config in bots:
             if bot_config['account'] in self.platforms:
                 platform = self.platforms[bot_config['account']]
@@ -63,7 +62,7 @@ class TradingManager:
         while True:
             if is_london_market_open():
                 for bot_id, bot in self.bots.items():
-                    if bot.config['statusBoot'] == "active":
+                    if bot.config['botStatus'] == "active":
                         bot.run()
             else:
                 logger.info("Mercado de Londres cerrado. Esperando para la próxima sesión.")

@@ -39,7 +39,7 @@ class MT5Platform(TradingPlatform):
             request = {
                 "action": mt5.TRADE_ACTION_DEAL,
                 "symbol": symbol,
-                "volume": 2.0,
+                "volume": float(volume),
                 "type": order_type,
                 "price": price,
                 "sl": sl,

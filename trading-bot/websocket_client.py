@@ -17,6 +17,8 @@ class WebSocketClient:
         self.is_connected = False
         self.should_run = True
         self.heartbeat_interval = 30
+        self.api_secret = "b17b7d9f8a9c1f4e5d8e3a9b2c7f6e3d1a2b9c7e5d8f1b2c3a4e7f6b9d2e3c1f7a5b6d"
+
 
     def set_on_message_callback(self, callback):
         self.on_message_callback = callback
@@ -35,7 +37,8 @@ class WebSocketClient:
                 self.connect()
                 self.ws.run_forever(ping_interval=self.heartbeat_interval,
                                     ping_timeout=10,
-                                    ping_payload='{"type":"ping"}')
+                                    ping_payload='{"type":"ping"}',
+                                    sslopt={"cert_reqs": ssl.CERT_NONE})
             except Exception as e:
                 logger.error(f"WebSocket run error: {e}")
             
@@ -53,8 +56,28 @@ class WebSocketClient:
             self.ws.close()
 
     def _on_message(self, ws, message):
-        if self.on_message_callback:
-            self.on_message_callback(message)
+        print('Received message type:', type(message))  # Esto mostrará el tipo de mensaje
+        try:
+            # Intenta analizar el mensaje como JSON
+            data = json.loads(message)
+            print("Parsed JSON data:", data)  # Imprime los datos JSON
+
+            # Si `data` es un diccionario, procede con los índices de string
+            if isinstance(data, dict):
+                if self.on_message_callback:
+                    self.on_message_callback(data)
+            else:
+                logger.error("Received JSON data is not a dictionary. Received type: {}".format(type(data)))
+
+        except json.JSONDecodeError:
+            # Si el mensaje no es JSON, lo registra como texto
+            logger.info(f"Received non-JSON message: {message}")
+            if self.on_message_callback:
+                self.on_message_callback(message)
+        except TypeError as e:
+            logger.error(f"Type error while processing message: {e}")
+        except KeyError as e:
+            logger.error(f"Key error: {e} in message {message}")
 
     def _on_error(self, ws, error):
         logger.error(f"WebSocket error: {error}")

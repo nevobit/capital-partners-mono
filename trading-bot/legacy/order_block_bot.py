@@ -15,7 +15,7 @@ class OrderBlockBot:
         self.config = config
         self.symbol = config['symbol']
         self.timeframe = 16385
-        self.lot_size = float(config['lot_size'])
+        self.lot_size = float(config['lotSize'])
         self.last_check_time = datetime.now(LONDON_TZ) - timedelta(minutes=10)
 
     def custom_atr(self, high, low, close, period):
@@ -90,7 +90,7 @@ class OrderBlockBot:
                 rr_ratio = self.calculate_risk_reward(entry_point, stop_loss, take_profit)
 
                 if rr_ratio >= 2:
-                    self.platform.place_order(self.symbol, order_type, float(self.lot_size), entry_point, stop_loss, take_profit)
+                    self.platform.place_order(self.symbol, order_type, float(self.lotSize), entry_point, stop_loss, take_profit)
                     logger.info(f"Orden colocada: {self.symbol}, Tipo: {market_direction}, Entrada: {entry_point:.5f}, SL: {stop_loss:.5f}, TP: {take_profit:.5f}, R:R: {rr_ratio:.2f}")
                 else:
                     logger.info(f"Ratio R:R no aceptable: {rr_ratio:.2f}")

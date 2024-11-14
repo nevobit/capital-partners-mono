@@ -1,7 +1,8 @@
-MetaTrader5
+MetaTrader5==5.0.4424
 numpy
 pandas
 pytz
 websocket-client
 requests
 rel
+zmq
